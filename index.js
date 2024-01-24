@@ -4,16 +4,10 @@
 const WebSocket = require("ws");
 const wss = new WebSocket.Server({ port: 4500 });
 
-const broadcastSelf = (process.env.broadcastSelf === "true")
-
-function broadcast(msg, ws) {
+function broadcast(msg) {
   for (const client of wss.clients) {
     if (client.readyState === WebSocket.OPEN) {
-      if (broadcastSelf == false && client !== ws) {
-        client.send(msg, { binary: false });
-      } else {
-        client.send(msg, { binary: false });
-      }
+      client.send(msg, {binary: false})
     }
   }
 }
