@@ -2,25 +2,24 @@
 // created by TheDevNate (TEAM#1)
 
 const WebSocket = require("ws");
-
-console.log("Server starting..");
-
 const wss = new WebSocket.Server({ port: 4500 });
 
-console.log("Server started, not ready.");
+const broadcastSelf = process.env.broadcastSelf || true
 
-function broadcast(msg) {
+function broadcast(msg, ws) {
   for (const client of wss.clients) {
     if (client.readyState === WebSocket.OPEN) {
-      client.send(msg, { binary: false });
+      if (broadcastSelf == false && client !== ws) {
+        client.send(msg, { binary: false });
+      } else {
+        client.send(msg, { binary: false });
+      }
     }
   }
 }
 
 wss.on("connection", (ws) => {
   ws.on("message", function (data) {
-    broadcast(data);
+    broadcast(data, ws);
   });
 });
-
-console.log("Server ready.");
