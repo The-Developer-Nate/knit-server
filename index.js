@@ -4,7 +4,7 @@
 const WebSocket = require("ws");
 const wss = new WebSocket.Server({ port: 4500 });
 
-const broadcastSelf = process.env.broadcastSelf || true
+const broadcastSelf = (process.env.broadcastSelf === "true")
 
 function broadcast(msg, ws) {
   for (const client of wss.clients) {
